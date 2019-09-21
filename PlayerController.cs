@@ -11,13 +11,19 @@ public class PlayerController : MonoBehaviour
     public Text countText;
     private Rigidbody2D rb2d;
     private int count;
+    public int life;
     public Text winText;
+    public Text lifeText;
+    public Text looseText;
     private void Start()
     {
         rb2d = GetComponent<Rigidbody2D>();
         count = 0;
         SetCountText();
         winText.text = "";
+        life = 3;
+        SetLifeText();
+        looseText.text = "";
     }
     private void FixedUpdate()
     {
@@ -43,14 +49,35 @@ public class PlayerController : MonoBehaviour
             count = count + 1;
             SetCountText();
         }
+        else if (other.gameObject.CompareTag("Enemy"))
+        {
+            other.gameObject.SetActive(false);
+            life = life - 1;
+            SetLifeText();
+        }
+
+        if (count == 12)
+        {
+            transform.position = new Vector2(0.0f, 50.0f);
+        }
 
     }
     void SetCountText()
     {
         countText.text = "Count:" + count.ToString();
-        if (count >= 12)
+        if (count >= 20)
         {
             winText.text = "You win! Game created by Tennyson Branch";
+        }
+        
+    }
+    void SetLifeText()
+    {
+        lifeText.text = "Lives: " + life.ToString();
+        if (life <= 0)
+        {
+            looseText.text = "Loooooser";
+            Destroy(this);
         }
     }
 }
